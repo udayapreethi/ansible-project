@@ -41,7 +41,7 @@
             group: root
             mode: '0644'
         - name: Update bashrc file
-          template:
+          file:
             src: roles/configurations/file/bashrc.txt.j2
             dest: /etc/bash.bashrc
             owner: root
