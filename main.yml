@@ -40,6 +40,13 @@
             owner: root
             group: root
             mode: '0644'
+        - name: Update bashrc file
+          template:
+            src: roles/configurations/file/bashrc.txt.j2
+            dest: /etc/bash.bashrc
+            owner: root
+            group: root
+            mode: '0644'            
 
         - name: Restart apache2 Service (Ubuntu)
           service:
