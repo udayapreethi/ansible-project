@@ -42,7 +42,7 @@
             mode: '0644'
         - name: Update bashrc file
           file:
-            src: roles/configurations/file/bashrc.txt.j2
+            src: roles/configurations/files/bashrc.txt
             dest: /etc/bash.bashrc
             owner: root
             group: root
