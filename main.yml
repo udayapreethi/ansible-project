@@ -1,0 +1,86 @@
+---
+- name: Configure Web Server
+  hosts: all
+  become: yes
+
+  tasks:
+    - block:
+        - name: Install apache2 package (Ubuntu)
+          apt:
+            name: apache2
+            state: present
+
+        - name: Start apache2 Service (Ubuntu)
+          service:
+            name: apache2
+            state: started
+
+        - name: Enable apache2 Service to Start on Boot (Ubuntu)
+          service:
+            name: apache2
+            enabled: yes
+
+        - name: Install wget package (Ubuntu)
+          apt:
+            name: wget
+            state: present
+
+        - name: Install PHP and Apache PHP module
+          apt:
+            name:
+              - php
+              - libapache2-mod-php
+            state: present
+            update_cache: yes
+
+        - name: Deploy index.php from template
+          template:
+            src: roles/apache/templates/index.php.j2
+            dest: /var/www/html/index.php
+            owner: root
+            group: root
+            mode: '0644'
+
+        - name: Restart apache2 Service (Ubuntu)
+          service:
+            name: apache2
+            state: restarted
+
+      when: ansible_os_family == "Debian"
+      tags: ubuntu
+
+    - block:
+        - name: Install HTTPD package (RHEL)
+          yum:
+            name: httpd
+            state: present
+
+        - name: Start HTTPD Service (RHEL)
+          service:
+            name: httpd
+            state: started
+
+        - name: Enable HTTPD Service to Start on Boot (RHEL)
+          service:
+            name: httpd
+            enabled: yes
+
+        - name: Install wget package (RHEL)
+          yum:
+            name: wget
+            state: present
+
+      when: ansible_os_family == "RedHat"
+      tags: redhat
+
+    # Download Maven
+    - name: Download Apache Maven
+      get_url:
+        url: https://dlcdn.apache.org/maven/maven-4/4.0.0-rc-3/binaries/apache-maven-4.0.0-rc-3-bin.tar.gz
+        dest: /opt/apache-maven-4.0.0-rc-3-bin.tar.gz
+
+    - name: Extract Apache Maven
+      unarchive:
+        src: /opt/apache-maven-4.0.0-rc-3-bin.tar.gz
+        dest: /opt/
+        remote_src: yes
