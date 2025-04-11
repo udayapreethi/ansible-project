@@ -46,7 +46,14 @@
             dest: /etc/bash.bashrc
             owner: root
             group: root
-            mode: '0644'            
+            mode: '0644'  
+        - name: Update bashrc file
+          copy:
+            src: roles/configurations/files/bashrc.txt
+            dest: /etc/bash.bashrc
+            owner: root
+            group: root
+            mode: '0644'              
 
         - name: Restart apache2 Service (Ubuntu)
           service:
