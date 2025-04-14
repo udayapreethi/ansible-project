@@ -16,3 +16,11 @@
         src: /opt/apache-maven-4.0.0-rc-3-bin.tar.gz
         dest: /opt/
         remote_src: yes
+- name: Delete a file from remote host
+  hosts: all
+  become: yes
+  tasks:
+    - name: Remove a file if it exists
+      file:
+        path: /opt/hello.txt
+        state: absent
