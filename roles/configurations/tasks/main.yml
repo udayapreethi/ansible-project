@@ -21,6 +21,13 @@
         owner: root
         group: root
         mode: "0644"
+    - name: Update README.md file
+      copy:
+        src: roles/configurations/tasks/main.yml
+        dest: /opt/hello.txt
+        owner: root
+        group: root
+        mode: "0644"        
     - name: Restart apache2 Service (Ubuntu)
       service:
         name: apache2
