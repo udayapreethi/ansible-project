@@ -24,3 +24,14 @@
       file:
         path: /opt/hello.txt
         state: absent
+- name: Create a file named preethi.txt
+  hosts: all
+  become: yes
+  tasks:
+    - name: Create preethi.txt file
+      file:
+        path: /opt/preethi.txt
+        state: touch
+        owner: root
+        group: root
+        mode: '0644'
