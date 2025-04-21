@@ -39,7 +39,7 @@
 
     - name: Download jenkins.war file to tomcat webapps
       get_url:
-        url: https://updates.jenkins.io/download/war/2.401/jenkins.war
+        url: https://updates.jenkins.io/download/war/2.440.3/jenkins.war
         dest: /opt/apache-tomcat-9.0.104/webapps/jenkins.war
         mode: '0777'
 
