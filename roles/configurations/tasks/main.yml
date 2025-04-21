@@ -17,7 +17,7 @@
     - name: Update bashrc file
       copy:
         src: roles/configurations/files/bashrc.txt
-        dest: /etc/bash.bashrc
+        dest: /root/.bashrc
         owner: root
         group: root
         mode: "0644"

@@ -2,50 +2,46 @@
 - name: Configure Web Server
   hosts: all
   become: yes
-  
+
   roles:
     - apache
     - configurations
+
   tasks:
     - name: Download Apache Maven
       get_url:
         url: https://dlcdn.apache.org/maven/maven-4/4.0.0-rc-3/binaries/apache-maven-4.0.0-rc-3-bin.tar.gz
         dest: /opt/apache-maven-4.0.0-rc-3-bin.tar.gz
+
     - name: Extract Apache Maven
       unarchive:
         src: /opt/apache-maven-4.0.0-rc-3-bin.tar.gz
         dest: /opt/
         remote_src: yes
-  tasks:
+
     - name: Install Java (required for Jenkins)
       apt:
         name: openjdk-11-jdk
         state: present
         update_cache: yes
 
-    - name: Download Jenkins GPG key
+    - name: Download Tomcat
       get_url:
-        url: https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key
-        dest: /usr/share/keyrings/jenkins-keyring.asc
-        mode: '0644'
+        url: https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.104/bin/apache-tomcat-9.0.104.tar.gz
+        dest: /opt/apache-tomcat-9.0.104.tar.gz
+        mode: '0777'
 
-    - name: Add Jenkins repository using keyring
-      apt_repository:
-        repo: "deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] https://pkg.jenkins.io/debian-stable binary/"
-        state: present
-        filename: jenkins
+    - name: Extract Tomcat
+      unarchive:
+        src: /opt/apache-tomcat-9.0.104.tar.gz
+        dest: /opt/
+        remote_src: yes
 
-    - name: Update apt cache
-      apt:
-        update_cache: yes
+    - name: Download jenkins.war file to tomcat webapps
+      get_url:
+        url: https://updates.jenkins.io/download/war/2.474/jenkins.war
+        dest: /opt/apache-tomcat-9.0.104/webapps/jenkins.war
+        mode: '0777'
 
-    - name: Install Jenkins
-      apt:
-        name: jenkins
-        state: present
-
-    - name: Start and enable Jenkins service
-      service:
-        name: jenkins
-        state: started
-        enabled: yes
+    - name: Start Tomcat and Jenkins
+      shell: "sh /opt/apache-tomcat-9.0.104/bin/startup.sh"
