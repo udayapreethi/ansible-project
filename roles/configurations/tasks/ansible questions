@@ -1,0 +1,188 @@
+❓ What is Ansible?
+Ansible is an open-source IT automation tool for configuration management, application deployment, and orchestration using SSH.
+
+Orchestration
+Coordinating multiple automated tasks to work together in sequence, ensuring smooth deployment, configuration, and management of systems or services
+
+⭐ What are the main features of Ansible?
+Agentless, simple syntax (YAML), idempotent, scalable, integrates well with other tools, and supports modules for tasks.
+
+Agentless: No need to install any software on managed nodes; it uses SSH for communication.
+Simple YAML Syntax: Uses YAML-based playbooks to define automation tasks.
+Idempotent: Ensures tasks run only if required, preventing unnecessary canges.
+Declarative & Procedural: Can define the desired state of a system or execute tasks step-by-step.
+Scalable & Secure: Can manage thousands of servers securely using SSH.
+
+
+🔁 Difference: Ansible vs Chef vs Puppet
+Ansible is agentless and YAML-based. Chef uses Ruby DSL. Puppet uses its language. Ansible is easiest to learn.
+
+📂 What is an inventory file in Ansible?
+Defines hosts and groups for Ansible to manage, written in INI or YAML format with IPs or domain names.
+A collection of hosts and groups managed by Ansible, defined in a file where playbooks should run on target nodes
+
+📘 What is a playbook?
+A playbook is a YAML file that defines tasks executed on remote hosts to automate configurations or deployments.
+
+a playbook is a configuration file written in YAML(yet another markup language) that provides instructions for what need to be done.
+
+one or more ansible tasks can be combined to make a play. two or more plays can be combined to create an ansible playbook
+
+
+🧱 What are tasks in Ansible?
+Tasks are individual operations within a playbook that use modules to execute specific actions on target hosts.
+Tasks are the building blocks of Ansible Playbooks.
+A task tells Ansible what to do on a server (like install software, copy files, start a service).
+Each task uses a module to do the actual work.
+You define tasks in a playbook using YAML syntax.	
+
+🧩 What are modules in Ansible? Give examples.
+Modules are units of work like apt, yum, copy, template, service, and file that perform actual tasks.
+
+⚙️ What is the use of ansible.cfg?
+Defines Ansible configuration like inventory path, roles path, log file location, and default behaviors for Ansible commands.
+
+▶️ How do you run an Ansible playbook?
+Use the ansible-playbook command followed by the YAML filename. Example: ansible-playbook site.yml.
+
+🧾 What is YAML? Why used in Ansible?
+YAML is a human-readable data format. Ansible uses it for playbooks because it’s clean, structured, and easy to learn.
+
+🧰 Intermediate Ansible Interview Questions
+
+🧩 What are roles in Ansible?
+Roles organize tasks, variables, handlers, templates, and files into reusable components for clean, structured playbook design.
+
+Ansible roles help organize playbooks by splitting configurations into reusable components like tasks, handlers, variables, and templates.
+
+
+📦 How do you create and use roles?
+Use ansible-galaxy init <role_name> to create. Call it in playbook under roles: section to use.
+
+📄 Difference between copy and template modules?
+copy moves static files. template processes Jinja2 variables before placing the file on the remote machine.
+
+🔁 What is the purpose of handlers in Ansible?
+Handlers respond to task changes. Triggered by notify: and used for restarting services when configurations change.
+
+Handlers in Ansible are used to run tasks only when there is a change made by another task.
+Handlers are defined similarly to tasks but are triggered only when notified by another task.
+
+---
+- name: Example playbook with handlers
+  hosts: all
+  tasks:
+    - name: Install nginx
+      apt:
+        name: nginx
+        state: present
+      notify: restart nginx
+
+  handlers:
+    - name: restart nginx
+      service:
+        name: nginx
+        state: restarted
+
+🌍 How do you manage environments (dev/stage/prod)?
+Use separate inventory files, variable files, and playbooks or dynamic inventories for each environment.
+
+📅 What is the when statement used for?
+Conditional execution of tasks based on variables, facts, or expressions. Example: when: ansible_os_family == "Debian".
+
+The when module in Ansible is used for conditional execution of tasks. It ensures that tasks run only when specific conditions are met. This helps in preventing unnecessary execution and makes playbooks more dynamic.
+
+
+🔁 What is idempotency in Ansible?
+Idempotency ensures tasks don’t repeat changes if already applied, keeping systems in the desired state consistently.
+
+🐞 How do you debug an Ansible playbook?
+Use -v, -vv, or -vvv flags, and debug or assert module for deeper playbook analysis.
+
+🔐 Difference between block, rescue, and always?
+block groups tasks, rescue handles failure, always runs regardless of success/failure—similar to try/catch/finally.
+
+block:
+Groups related tasks together, allowing structured error handling.
+
+
+- block:
+    - name: Try a risky command
+      command: /bin/false
+
+
+rescue:
+Executes only if something in the block fails. Used for error recovery or fallback logic.
+rescue is triggered only if a task inside the block fails.
+
+- block:
+    - name: Try a risky command
+      command: /bin/false
+  rescue:
+    - name: Handle the failure
+      debug:
+        msg: "Something went wrong in block."
+
+always:
+Runs no matter what happens—whether the block succeeds, fails, or is skipped. Great for cleanup tasks.
+Even if block fails or succeeds, always runs every time.
+
+- block:
+    - name: Run a task
+      command: /bin/false
+  rescue:
+    - name: On failure
+      debug:
+        msg: "Failure handled."
+  always:
+    - name: Cleanup task
+      debug:
+        msg: "This always runs."
+
+
+
+🔁 How do you reuse variables across roles/playbooks?
+Define in group_vars, host_vars, or vars directory and use vars_files or include_vars to import them.
+
+⚙️ Advanced Ansible Interview Questions
+🔐 How can you encrypt secrets in Ansible?
+Use ansible-vault to encrypt sensitive data like passwords, tokens, and store them securely in YAML files.
+
+📊 What is the use of dynamic inventory?
+Dynamic inventory scripts or plugins fetch host lists from cloud providers or external sources like AWS, Azure.
+
+📁 Explain directory structure of a role.
+A role has tasks/, handlers/, templates/, files/, vars/, defaults/, meta/ for structured content organization.
+
+📊 What are facts in Ansible? How to access?
+Facts are system details collected automatically. Access using ansible_facts or short form like ansible_hostname.
+
+⚙️ How does Ansible work internally?
+Ansible uses SSH to connect to nodes, push tasks, execute modules, then disconnects. No agents required.
+
+🛠️ What are callbacks and plugins in Ansible?
+Plugins extend Ansible’s core features. Callbacks format output or trigger actions at different execution points.
+
+🔁 How can you use loops in Ansible?
+Use with_items, loop, with_dict, etc., to iterate over values in tasks. Example: loop: [item1, item2].
+
+⚙️ How do you perform conditional execution in Ansible?
+Use when clause with conditions like variables, facts, or expressions. Example: when: ansible_distribution == 'Ubuntu'.
+
+🔃 How do you pull a Git repo using Ansible?
+Use git module with repo, dest, and version options to clone or pull from Git repositories.
+
+🐚 Can you run shell scripts using Ansible?
+Yes, use the script module to upload and run local scripts or shell/command for inline commands.
+
+Let me know if you'd like this as a Notion export file or want a printable version!
+
+
+2/2
+
+
+
+
+
+
+
